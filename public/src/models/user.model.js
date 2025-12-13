@@ -1,6 +1,8 @@
+// 7:10 cloudinary
+
 import mongoose , {Schema}  from 'mongoose';
-import {ByteUtils as bcrypt} from "mongodb/src/utils.js";
-import * as jwt from "node/crypto.js";
+import bcrypt from "bcryptjs"; // or "bcrypt"
+import jwt from "jsonwebtoken";
 
 const userSchema = new Schema({
     username:{
@@ -47,15 +49,16 @@ const userSchema = new Schema({
 }, {timestamps: true});
 
 // don't write arrow function directly it doesn't have context
-userSchema.pre("save", function() {
+userSchema.pre("save", async function (next) {
     // sending password field for the first time
-    if (!this.isModified("password")) return next()
-    this.password = bcrypt.hash(this.password, 10)
-    next()
-})
+    if (!this.isModified("password")) return next();
+
+    this.password = await bcrypt.hash(this.password, 10);
+    next();
+});
 
 userSchema.methods.generateAccessToken = function() {
-    jwt.sign(
+    return jwt.sign(
         {
             _id: this._id,
             email: this.email,
@@ -72,7 +75,7 @@ userSchema.methods.generateAccessToken = function() {
 userSchema.methods.generateRefreshToken = function() {
     jwt.sign(
         {
-            _id: this.id,
+            _id: this._id,
         },
         process.env.REFRESH_TOKEN_SECRET,
         {
