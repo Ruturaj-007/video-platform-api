@@ -20,6 +20,14 @@ app.use(express.urlencoded({
     extended:true, limit: "16kb"
 }))
 app.use(express.static("public"))
-app.use(cookieParser)
+app.use(cookieParser())
+
+// routes import
+import userRouter from './routes/user.routes.js'
+
+// routers declaration
+app.use("/api/v1/users", userRouter) // user trying to visit till /users i dont handle that i pass on to userRouter
+
+// user trying to visit http://localhost:8080/api/v1/users/register
 
 export { app }

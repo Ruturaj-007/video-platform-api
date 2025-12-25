@@ -1,7 +1,7 @@
 // 7:10 cloudinary
 
 import mongoose , {Schema}  from 'mongoose';
-import bcrypt from "bcryptjs"; // or "bcrypt"
+import bcrypt from "bcryptjs";      // or "bcrypt"
 import jwt from "jsonwebtoken";
 
 const userSchema = new Schema({
