@@ -1,6 +1,7 @@
 import { Router } from "express";
-import {registerUser} from "../controllers/user.controller.js";
+import {logoutUser, registerUser} from "../controllers/user.controller.js";
 import {upload} from "../middlewares/multer.middleware.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = Router()
 
@@ -9,7 +10,7 @@ router.route("/register").post(
         console.log("Before multer - Files:", req.files);
         next();
     },
-    upload.fields([
+    upload.fields([             // We're using Middleware in routes 
         {
             name: "avatar",
             maxCount: 1
@@ -21,9 +22,12 @@ router.route("/register").post(
     ]),
     (req, res, next) => {
         console.log("After multer - Files:", req.files);
-        next();
+        next(); // Calls next() → controller
     },
     registerUser
 )
+
+// Secued routes 
+router.route("/logout").post(logoutUser)
 
 export default router

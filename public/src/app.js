@@ -20,7 +20,7 @@ app.use(express.urlencoded({
     extended:true, limit: "16kb"
 }))
 app.use(express.static("public"))
-app.use(cookieParser())
+app.use(cookieParser()) // VIP-Helps us to acess cookie in req and response
 
 // routes import
 import userRouter from './routes/user.routes.js'
