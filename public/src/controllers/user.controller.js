@@ -111,9 +111,14 @@ const loginUser = asyncHandler(async(req, res)=>{
 
     const {email, username, password} = req.body // get credenetials from req.body 
 
-    if (!username || !email) {
-        throw new ApiError(400, "username or email is required")
+    if (!username && !email) {
+        throw new ApiError(400, "username and email is required")
     }
+
+    // ALTERNATIVE -> If u want only one just wrap in & give exclamatory sign 
+    // if (!(!username || !email)) {
+    //     throw new ApiError(400, "username or email is required")
+    // }
 
     const user = await User.findOne({
         $or: [{username}, {email}] // or operator will either find username or email(obj's) we've stored them in array
@@ -123,8 +128,7 @@ const loginUser = asyncHandler(async(req, res)=>{
         throw new ApiError(404, "User does not exist")
     }
     
-    const isPasswordValid = await user.isPasswordCorrect
-    (password)
+    const isPasswordValid = await user.isPasswordCorrect(password)
     
     if (!isPasswordValid) {
         throw new ApiError(401, "Invalid user credentials")
@@ -138,7 +142,7 @@ const loginUser = asyncHandler(async(req, res)=>{
 
     const options = { // set cookies    
         httpOnly: true,
-        secure: true
+        secure: false 
     }
 
     return res
@@ -171,7 +175,7 @@ const loginUser = asyncHandler(async(req, res)=>{
 
         const options = {
             httpOnly: true,
-            secure: true 
+            secure: false
         }
 
         return res
