@@ -61,12 +61,13 @@ const deleteFromCloudinary = async (imageUrl) => {
 
         const urlParts = imageUrl.split('/');
         const publicIdWithExtension = urlParts[urlParts.length - 1];
-        const publicId = publicIdWithExtension.split('-'[0]) // removes file extension
+        const publicId = publicIdWithExtension.split('.')[0]; // removes file extension
 
-        console.log("Deleting image from cloudinary " , publicId);
+        console.log("Deleting image from cloudinary:", publicId);
+
         // Delete image from cloudinary
         const response  = await cloudinary.uploader.destroy(publicId);
-        console.log("Image deleted from cloudinary: " , response)
+        console.log("Image deleted from cloudinary:", response)
 
         return response;
 
